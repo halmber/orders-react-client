@@ -1,0 +1,33 @@
+{
+  "btn.cancel": "Cancel",
+  "orders.title": "Orders",
+  "orders.filter": "Filter",
+  "orders.addNew": "Add Order",
+  "orders.emptyList": "Orders list is empty",
+  "orders.field.customer": "Customer",
+  "orders.field.amount": "Amount",
+  "orders.field.status": "Status",
+  "orders.field.payment": "Payment Method",
+  "orders.field.created": "Created",
+  "orders.field.customerEmail": "Customer Email",
+  "orders.filter.title": "Filter Orders",
+  "orders.filter.all": "All",
+  "orders.filter.clear": "Clear",
+  "orders.filter.apply": "Apply",
+  "orders.delete.title": "Delete Order",
+  "orders.delete.confirmation": "Are you sure you want to delete this order?",
+  "orders.delete.confirm": "Delete",
+  "pagination.previous": "Previous",
+  "pagination.next": "Next",
+  "pagination.page": "Page",
+  "pagination.of": "of",
+
+  "orders.status.NEW": "New",
+  "orders.status.PROCESSING": "Processing",
+  "orders.status.DONE": "Done",
+  "orders.status.CANCELED": "Canceled",
+
+  "orders.paymentMethod.CARD": "Card",
+  "orders.paymentMethod.CASH": "Cash",
+  "orders.paymentMethod.PAYPAL": "PayPal"
+}

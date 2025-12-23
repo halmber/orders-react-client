@@ -1,0 +1,44 @@
+{
+  "btn.cancel": "Відмінити",
+  "orderDetails.title.details": "Деталі замовлення",
+  "orderDetails.title.create": "Створення замовлення",
+
+  "orderDetails.field.id": "ID замовлення",
+  "orderDetails.field.customerId": "ID клієнта",
+  "orderDetails.field.customerId.placeholder": "Введіть ID клієнта",
+  "orderDetails.field.customerName": "Ім'я клієнта",
+  "orderDetails.field.customerEmail": "Email клієнта",
+  "orderDetails.field.amount": "Сума",
+  "orderDetails.field.amount.placeholder": "Введіть суму",
+  "orderDetails.field.status": "Статус",
+  "orderDetails.field.paymentMethod": "Спосіб оплати",
+  "orderDetails.field.createdAt": "Дата створення",
+
+  "orderDetails.status.NEW": "Новий",
+  "orderDetails.status.PROCESSING": "В обробці",
+  "orderDetails.status.DONE": "Завершено",
+  "orderDetails.status.CANCELED": "Скасовано",
+
+  "orderDetails.paymentMethod.CARD": "Картка",
+  "orderDetails.paymentMethod.CASH": "Готівка",
+  "orderDetails.paymentMethod.PAYPAL": "PayPal",
+
+  "orderDetails.btn.back": "Назад",
+  "orderDetails.btn.save": "Зберегти",
+  "orderDetails.btn.create": "Створити",
+  "orderDetails.btn.edit": "Редагувати",
+
+  "validation.required": "{field} є обов'язковим",
+  "validation.min": "{field} має містити мінімум {min} символів",
+  "validation.max": "{field} має містити максимум {max} символів",
+  "validation.email": "Невірний формат email",
+  "validation.number": "Має бути число",
+  "validation.number.min": "{field} має бути не менше {min}",
+  "validation.number.max": "{field} має бути не більше {max}",
+  "validation.number.positive": "Має бути позитивним числом",
+  "validation.number.integer": "Має бути цілим числом",
+  "validation.date": "Невірний формат дати",
+  "validation.pattern": "Невірний формат",
+  "validation.oneOf": "Оберіть одне зі значень",
+  "validation.custom": "Невірне значення"
+}

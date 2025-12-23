@@ -1,0 +1,33 @@
+{
+  "btn.cancel": "Відмінити",
+  "orders.title": "Замовлення",
+  "orders.filter": "Фільтр",
+  "orders.addNew": "Додати замовлення",
+  "orders.emptyList": "Список замовлень порожній",
+  "orders.field.customer": "Клієнт",
+  "orders.field.amount": "Сума",
+  "orders.field.status": "Статус",
+  "orders.field.payment": "Спосіб оплати",
+  "orders.field.created": "Створено",
+  "orders.field.customerEmail": "Email клієнта",
+  "orders.filter.title": "Фільтрувати замовлення",
+  "orders.filter.all": "Всі",
+  "orders.filter.clear": "Очистити",
+  "orders.filter.apply": "Застосувати",
+  "orders.delete.title": "Видалення замовлення",
+  "orders.delete.confirmation": "Ви впевнені, що хочете видалити це замовлення?",
+  "orders.delete.confirm": "Видалити",
+  "pagination.previous": "Попередня",
+  "pagination.next": "Наступна",
+  "pagination.page": "Сторінка",
+  "pagination.of": "з",
+
+  "orders.status.NEW": "Новий",
+  "orders.status.PROCESSING": "В обробці",
+  "orders.status.DONE": "Завершено",
+  "orders.status.CANCELED": "Скасовано",
+
+  "orders.paymentMethod.CARD": "Картка",
+  "orders.paymentMethod.CASH": "Готівка",
+  "orders.paymentMethod.PAYPAL": "PayPal"
+}

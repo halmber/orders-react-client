@@ -1,0 +1,44 @@
+{
+  "btn.cancel": "Cancel",
+  "orderDetails.title.details": "Order Details",
+  "orderDetails.title.create": "Create Order",
+
+  "orderDetails.field.id": "Order ID",
+  "orderDetails.field.customerId": "Customer ID",
+  "orderDetails.field.customerId.placeholder": "Enter customer ID",
+  "orderDetails.field.customerName": "Customer Name",
+  "orderDetails.field.customerEmail": "Customer Email",
+  "orderDetails.field.amount": "Amount",
+  "orderDetails.field.amount.placeholder": "Enter amount",
+  "orderDetails.field.status": "Status",
+  "orderDetails.field.paymentMethod": "Payment Method",
+  "orderDetails.field.createdAt": "Created At",
+
+  "orderDetails.status.NEW": "New",
+  "orderDetails.status.PROCESSING": "Processing",
+  "orderDetails.status.DONE": "Done",
+  "orderDetails.status.CANCELED": "Canceled",
+
+  "orderDetails.paymentMethod.CARD": "Card",
+  "orderDetails.paymentMethod.CASH": "Cash",
+  "orderDetails.paymentMethod.PAYPAL": "PayPal",
+
+  "orderDetails.btn.back": "Back",
+  "orderDetails.btn.save": "Save",
+  "orderDetails.btn.create": "Create",
+  "orderDetails.btn.edit": "Edit",
+
+  "validation.required": "{field} is required",
+  "validation.min": "{field} must contain at least {min} characters",
+  "validation.max": "{field} must contain at most {max} characters",
+  "validation.email": "Invalid email format",
+  "validation.number": "Must be a number",
+  "validation.number.min": "{field} must be at least {min}",
+  "validation.number.max": "{field} must be at most {max}",
+  "validation.number.positive": "Must be a positive number",
+  "validation.number.integer": "Must be an integer",
+  "validation.date": "Invalid date format",
+  "validation.pattern": "Invalid format",
+  "validation.oneOf": "Select one of the values",
+  "validation.custom": "Invalid value"
+}

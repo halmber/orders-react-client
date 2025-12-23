@@ -115,7 +115,7 @@ const theme = {
           secondary: commonColors.text.secondary,
         },
       },
-    }
+    },
   },
   link: {
     color: '#1C7FDB',
@@ -131,19 +131,21 @@ const theme = {
       primary: {
         background: commonColors.background.secondary,
       },
-    }
+    },
   },
   menuItem: {
     color: {
       header: {
         backgroundHovered: 'rgba(0, 0, 0, 0.05)',
         backgroundSelected: 'rgba(0, 0, 0, 0.1)',
+        text: commonColors.text.primaryContrast,
       },
       primary: {
         backgroundHovered: 'rgba(0, 0, 0, 0.05)',
         backgroundSelected: 'rgba(0, 0, 0, 0.1)',
+        text: commonColors.text.primary,
       },
-    }
+    },
   },
   pageContainer: {
     border: '#E6E6E6',
@@ -205,6 +207,40 @@ const theme = {
         fontWeight: 400,
         letterSpacing: '0.03333em',
         lineHeight: 1.3,
+      },
+    },
+  },
+  pagination: {
+    color: {
+      primary: {
+        background: commonColors.background.secondary,
+        backgroundHovered: commonColors.background.tertiary,
+        text: commonColors.text.primary,
+      },
+      secondary: {
+        background: commonColors.background.primary,
+        backgroundHovered: commonColors.background.primaryHeader,
+        text: commonColors.text.primaryContrast,
+      },
+    },
+  },
+  snackbar: {
+    variants: {
+      success: {
+        background: commonColors.background.success,
+        color: commonColors.text.success,
+      },
+      error: {
+        background: commonColors.background.error,
+        color: commonColors.text.error,
+      },
+      warning: {
+        background: commonColors.background.warning,
+        color: commonColors.text.warning,
+      },
+      info: {
+        background: commonColors.background.info,
+        color: commonColors.text.info,
       },
     },
   },

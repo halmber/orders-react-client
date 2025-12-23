@@ -5,5 +5,19 @@
   "page.login": "Login",
   "page.secret": "Secret Page",
   "signIn": "Sign In",
-  "signOut": "Sign Out"
+  "signOut": "Sign Out",
+  "orders.mock.created": "Order created. Mock data is being used.",
+  "orders.mock.recieved": "Data from the server has not been received. Mock data is being used.",
+  "orders.mock.updated": "Order details have been updated. Mock data is being used.",
+  "orders.mock.deleted": "Order deleted. Mock data is being used.",
+  "orders.created": "Order has been successfully created!",
+  "orders.list.recieved": "Order list successfully received!",
+  "orders.details.recieved": "Order details successfully received!",
+  "orders.details.updated": "Order details successfully updated!",
+  "orders.deleted": "Order has been successfully deleted.",
+  "orders.error.create": "Error occurred while creating order. Please try again later.",
+  "orders.error.update": "Error occurred while updating order. Please try again later.",
+  "orders.error.list.recieve": "Error occurred while recieving orders. Please try again later.",
+  "orders.error.details.recieve": "Error occurred while recieving order. Please try again later.",
+  "orders.error.delete": "Error occurred while deleting order. Please try again later."
 }

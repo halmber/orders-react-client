@@ -57,6 +57,11 @@ const getClasses = createUseStyles((theme) => ({
     gap: `${theme.spacing(1)}px`,
     justifyContent: 'flex-end',
   },
+  toolBarWrapperRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
   userNameMobile: {
     maxWidth: '110px',
   },
@@ -147,7 +152,7 @@ function Header({
         </div>
         <div className={classes.toolBarContainerRight}>
           {actualOrderedRightPanelItemTypes.map((itemType) => (
-            <>
+            <div key={itemType} className={classes.toolBarWrapperRight}>
               {itemType === rightPanelItemTypes.USER_NAME && (
                 <div ref={userMenuRef}>
                   <Hover
@@ -241,7 +246,7 @@ function Header({
                   </strong>
                 </Typography>
               )}
-            </>
+            </div>
           ))}
         </div>
         <Menu
@@ -255,6 +260,7 @@ function Header({
         >
           {orderedInterfaceLangs.map(lang => (
             <MenuItem
+              key={lang}
               onClick={() => {
                 changePage({
                   locationSearch: {

@@ -16,6 +16,7 @@ function Card({
   children,
   disablePaddings = false,
   variant = variants.paper,
+  ...props
 }) {
   const { theme } = useTheme();
   return (
@@ -32,6 +33,7 @@ function Card({
         transition: 'all 0.2s ease-out',
         width: '100%',
       }}
+      {...props}
     >
       {children}
     </CardMUI>

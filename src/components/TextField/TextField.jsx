@@ -12,6 +12,7 @@ const colorVariants = {
 const inputTypes = {
   password: 'password',
   text: 'text',
+  number: 'number',
 };
 
 const REQUIRED_CHAR = '*';
@@ -32,6 +33,7 @@ const TextField = ({
   onSelect,
   required = false,
   value,
+  name,
 }) => {
   const { theme } = useTheme();
   const [ state, setState ] = useState({
@@ -68,6 +70,7 @@ const TextField = ({
             {AdornmentStart}
           </InputAdornmentMui>
         ),
+        name,
       }}
       label={(
         <Typography color={labelColor}>

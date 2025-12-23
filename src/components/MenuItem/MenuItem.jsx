@@ -37,6 +37,7 @@ function MenuItem({
           '&.Mui-selected': {
             backgroundColor: theme.menuItem.color[colorVariant].backgroundSelected,
           },
+          color: theme.menuItem.color[colorVariant].text,
         },
       }}
       value={value}
