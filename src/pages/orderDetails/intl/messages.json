@@ -8,6 +8,8 @@
   "orderDetails.field.customerId.placeholder": "Enter customer ID",
   "orderDetails.field.customerName": "Customer Name",
   "orderDetails.field.customerEmail": "Customer Email",
+  "orderDetails.field.customerCity": "Customer City",
+  "orderDetails.field.customerPhone": "Customer Phone",
   "orderDetails.field.amount": "Amount",
   "orderDetails.field.amount.placeholder": "Enter amount",
   "orderDetails.field.status": "Status",

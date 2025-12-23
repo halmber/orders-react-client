@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { createUseStyles } from 'react-jss';
 import { useIntl } from 'react-intl';
 import { Formik, Form } from 'formik';
@@ -24,6 +24,7 @@ import {
   DEFAULT_FORMATDATE_OPTIONS,
   ORDER_STATUSES,
   PAYMENT_METHODS,
+  STATUS_COLORS,
 } from 'app/constants/orders';
 
 const getClasses = createUseStyles((theme) => ({
@@ -72,13 +73,6 @@ const getClasses = createUseStyles((theme) => ({
     marginRight: 'auto',
   },
 }));
-
-const STATUS_COLORS = {
-  [ORDER_STATUSES.NEW]: '#FFA500',
-  [ORDER_STATUSES.PROCESSING]: '#2196F3',
-  [ORDER_STATUSES.DONE]: '#4CAF50',
-  [ORDER_STATUSES.CANCELED]: '#F44336',
-};
 
 function OrderDetails({
   order,
@@ -131,7 +125,6 @@ function OrderDetails({
         await onCreate(orderData);
       } else {
         await onUpdate(order.id, orderData);
-        // setIsEditMode(false);
       }
     } catch (error) {
       // Error handled in Redux
@@ -139,7 +132,6 @@ function OrderDetails({
       setSubmitting(false);
     }
   };
-  useEffect(() => {}, [updateError, createError]);
 
   const handleCancel = () => {
     if (isNew) {
@@ -209,6 +201,30 @@ function OrderDetails({
                           })}
                         </Typography>
                         <Typography>{order?.customer?.email || '-'}</Typography>
+                      </div>
+                      <div className={classes.viewField}>
+                        <Typography variant="caption" color="secondary">
+                          {formatMessage({
+                            id: 'orderDetails.field.customerCity',
+                          })}
+                        </Typography>
+                        <Typography>{order?.customer?.city || '-'}</Typography>
+                      </div>
+                      <div className={classes.viewField}>
+                        <Typography variant="caption" color="secondary">
+                          {formatMessage({
+                            id: 'orderDetails.field.customerPhone',
+                          })}
+                        </Typography>
+                        <Typography>{order?.customer?.phone || '-'}</Typography>
+                      </div>
+                      <div className={classes.viewField}>
+                        <Typography variant="caption" color="secondary">
+                          {formatMessage({
+                            id: 'orderDetails.field.customerId',
+                          })}
+                        </Typography>
+                        <Typography>{order?.customer?.id || '-'}</Typography>
                       </div>
                     </div>
                   )}

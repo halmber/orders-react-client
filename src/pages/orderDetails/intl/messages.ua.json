@@ -8,6 +8,8 @@
   "orderDetails.field.customerId.placeholder": "Введіть ID клієнта",
   "orderDetails.field.customerName": "Ім'я клієнта",
   "orderDetails.field.customerEmail": "Email клієнта",
+  "orderDetails.field.customerCity": "Місто клієнта",
+  "orderDetails.field.customerPhone": "Телефон клієнта",
   "orderDetails.field.amount": "Сума",
   "orderDetails.field.amount.placeholder": "Введіть суму",
   "orderDetails.field.status": "Статус",
