@@ -254,7 +254,10 @@ function Orders({
                           {formatMessage({ id: 'orders.field.customer' })}
                         </Typography>
                         <Typography>
-                          <strong>{order.customer.fullName}</strong>
+                          <strong>
+                            {`${order.customer.firstName} ${order.customer.lastName}`.trim() ||
+                              '-'}
+                          </strong>
                         </Typography>
                         <Typography variant="caption">
                           {order.customer.email}
@@ -436,8 +439,12 @@ function Orders({
             </Typography>
             {orderToDelete && (
               <Typography>
-                <strong>{orderToDelete.customer.fullName}</strong> -{' '}
-                {orderToDelete.amount.toFixed(2)} {AMOUNT_CURRENCY}
+                <strong>
+                  {`${orderToDelete.customer.firstName} ${orderToDelete.customer.lastName}`.trim() ||
+                    '-'}
+                </strong>
+                {' - '}
+                {`${orderToDelete.amount.toFixed(2)} ${AMOUNT_CURRENCY}`}
               </Typography>
             )}
             {deleteError && (

@@ -32,6 +32,97 @@ import {
 import { showSnackbar } from './snackbar';
 import { snackbarActionVariants } from 'app/constants/snackbarVariants';
 
+const handleApiError = (
+  error,
+  fallbackMessage = 'error.INTERNAL_SERVER_ERROR'
+) => {
+  const message =
+    error?.response?.data?.message || error?.message || fallbackMessage;
+
+  return {
+    message,
+    code: error?.response?.status,
+    details: error?.response?.data,
+  };
+};
+
+/**
+ * Wrapper for API calls with mock data fallback and snackbar notifications
+ */
+export const apiCallWithMockFallback = async ({
+  apiCall,
+  mockFallback,
+  onSuccess,
+  onError,
+  successMessageId,
+  errorMessageId,
+  mockSuccessMessageId,
+  dispatch,
+}) => {
+  try {
+    const data = await apiCall();
+
+    if (onSuccess) dispatch(onSuccess(data));
+
+    if (successMessageId) {
+      dispatch(
+        showSnackbar({
+          messageId: successMessageId,
+          variant: snackbarActionVariants.success,
+        })
+      );
+    }
+
+    return data;
+  } catch (error) {
+    const apiError = handleApiError(error);
+
+    // If mock fallback is provided, try to get mock data
+    if (mockFallback) {
+      try {
+        const mockData = await mockFallback();
+
+        if (onSuccess) dispatch(onSuccess(mockData));
+
+        if (mockSuccessMessageId) {
+          dispatch(
+            showSnackbar({
+              messageId: mockSuccessMessageId,
+              variant: snackbarActionVariants.info,
+            })
+          );
+        }
+
+        return mockData;
+      } catch (mockError) {
+        const finalError = handleApiError(mockError);
+
+        if (onError) dispatch(onError(finalError.message));
+
+        if (errorMessageId) {
+          dispatch(
+            showSnackbar({
+              messageId: errorMessageId,
+              variant: snackbarActionVariants.error,
+            })
+          );
+        }
+      }
+    } else {
+      if (onError) dispatch(onError(apiError.message));
+
+      if (errorMessageId) {
+        dispatch(
+          showSnackbar({
+            messageId: errorMessageId,
+            variant: snackbarActionVariants.error,
+          })
+        );
+      }
+    }
+  }
+};
+
 // Action Creators
 const requestOrdersList = () => ({
   type: REQUEST_ORDERS_LIST,
@@ -126,43 +217,64 @@ const errorCreateOrder = (error) => ({
   payload: error,
 });
 
-// API calls
-const getOrdersList = ({
-  page = 0,
-  size = 10,
+// API
+const buildQueryParams = ({
+  page,
+  size,
   status,
   paymentMethod,
   customerEmail,
 }) => {
-  const { ORDERS_SERVICE } = config;
   const params = new URLSearchParams();
+
   params.append('page', page);
   params.append('size', size);
+
   if (status) params.append('status', status);
   if (paymentMethod) params.append('paymentMethod', paymentMethod);
   if (customerEmail) params.append('customerEmail', customerEmail);
 
-  return axios.get(`${ORDERS_SERVICE}/orders?${params.toString()}`);
+  return params.toString();
 };
 
-const deleteOrder = (orderId) => {
-  const { ORDERS_SERVICE } = config;
-  return axios.delete(`${ORDERS_SERVICE}/orders/${orderId}`);
-};
+const api = {
+  getOrdersList: ({
+    page = 0,
+    size = 10,
+    status,
+    paymentMethod,
+    customerEmail,
+  }) => {
+    const { ORDERS_SERVICE } = config;
+    const queryString = buildQueryParams({
+      page,
+      size,
+      status,
+      paymentMethod,
+      customerEmail,
+    });
+    return axios.get(`${ORDERS_SERVICE}/orders?${queryString}`);
+  },
 
-const getOrderDetails = (orderId) => {
-  const { ORDERS_SERVICE } = config;
-  return axios.get(`${ORDERS_SERVICE}/orders/${orderId}`);
-};
+  deleteOrder: (orderId) => {
+    const { ORDERS_SERVICE } = config;
+    return axios.delete(`${ORDERS_SERVICE}/orders/${orderId}`);
+  },
 
-const updateOrder = (orderId, orderData) => {
-  const { ORDERS_SERVICE } = config;
-  return axios.put(`${ORDERS_SERVICE}/orders/${orderId}`, orderData);
-};
+  getOrderDetails: (orderId) => {
+    const { ORDERS_SERVICE } = config;
+    return axios.get(`${ORDERS_SERVICE}/orders/${orderId}`);
+  },
 
-const createOrder = (orderData) => {
-  const { ORDERS_SERVICE } = config;
-  return axios.post(`${ORDERS_SERVICE}/orders`, orderData);
+  updateOrder: (orderId, orderData) => {
+    const { ORDERS_SERVICE } = config;
+    return axios.put(`${ORDERS_SERVICE}/orders/${orderId}`, orderData);
+  },
+
+  createOrder: (orderData) => {
+    const { ORDERS_SERVICE } = config;
+    return axios.post(`${ORDERS_SERVICE}/orders`, orderData);
+  },
 };
 
 // Thunks
@@ -172,198 +284,83 @@ const fetchOrdersList = () => (dispatch, getState) => {
 
   dispatch(requestOrdersList());
 
-  return getOrdersList({
-    page: currentPage,
-    size: pageSize,
-    status: filters.status || undefined,
-    paymentMethod: filters.paymentMethod || undefined,
-    customerEmail: filters.customerEmail || undefined,
-  })
-    .then((data) => {
-      dispatch(receiveOrdersList(data));
-      dispatch(
-        showSnackbar({
-          messageId: 'orders.list.recieved',
-          variant: snackbarActionVariants.success,
-        })
-      );
-      return data;
-    })
-    .catch((error) => {
-      try {
-        // Use mock data when an error occurs
-        const mockData = getMockOrdersList(currentPage, pageSize, filters);
-        dispatch(receiveOrdersList(mockData));
-
-        return mockData;
-      } catch (error) {
-        dispatch(
-          showSnackbar({
-            messageId: 'orders.error.list.recieve',
-            variant: snackbarActionVariants.error,
-          })
-        );
-      }
-    });
+  return apiCallWithMockFallback({
+    apiCall: () =>
+      api.getOrdersList({
+        page: currentPage,
+        size: pageSize,
+        status: filters.status || undefined,
+        paymentMethod: filters.paymentMethod || undefined,
+        customerEmail: filters.customerEmail || undefined,
+      }),
+    mockFallback: () => getMockOrdersList(currentPage, pageSize, filters),
+    onSuccess: receiveOrdersList,
+    onError: errorOrdersList,
+    successMessageId: 'orders.list.recieved',
+    mockSuccessMessageId: 'orders.mock.recieved',
+    errorMessageId: 'orders.error.list.recieved',
+    dispatch,
+  });
 };
 
 const fetchDeleteOrder = (orderId) => (dispatch) => {
   dispatch(requestDeleteOrder());
 
-  return deleteOrder(orderId)
-    .then(() => {
-      dispatch(successDeleteOrder(orderId));
-      dispatch(
-        showSnackbar({
-          messageId: 'orders.deleted',
-          variant: snackbarActionVariants.success,
-        })
-      );
-      return orderId;
-    })
-    .catch((error) => {
-      try {
-        // Use mock data when an error occurs
-        deleteMockOrder(orderId);
-        dispatch(successDeleteOrder(orderId));
-        dispatch(
-          showSnackbar({
-            messageId: 'orders.mock.deleted',
-            variant: snackbarActionVariants.info,
-          })
-        );
-        return orderId;
-      } catch (mockError) {
-        const mockErrorMessage =
-          mockError.message || 'Помилка при видаленні замовлення';
-        dispatch(errorDeleteOrder(mockErrorMessage));
-        dispatch(
-          showSnackbar({
-            messageId: 'orders.error.delete',
-            variant: snackbarActionVariants.error,
-          })
-        );
-      }
-    });
+  return apiCallWithMockFallback({
+    apiCall: () => api.deleteOrder(orderId),
+    mockFallback: () => deleteMockOrder(orderId),
+    onSuccess: () => successDeleteOrder(orderId),
+    onError: errorDeleteOrder,
+    successMessageId: 'orders.deleted',
+    mockSuccessMessageId: 'orders.mock.deleted',
+    errorMessageId: 'orders.error.delete',
+    dispatch,
+  });
 };
 
 const fetchOrderDetails = (orderId) => (dispatch) => {
   dispatch(requestOrderDetails());
 
-  return getOrderDetails(orderId)
-    .then((order) => {
-      dispatch(receiveOrderDetails(order));
-      dispatch(
-        showSnackbar({
-          messageId: 'orders.details.recieved',
-          variant: snackbarActionVariants.success,
-        })
-      );
-      return order;
-    })
-    .catch((error) => {
-      try {
-        // Use mock data when an error occurs
-        const mockOrder = getMockOrderDetails(orderId);
-        dispatch(receiveOrderDetails(mockOrder));
-        dispatch(
-          showSnackbar({
-            messageId: 'orders.mock.recieved',
-            variant: snackbarActionVariants.info,
-          })
-        );
-        return mockOrder;
-      } catch (mockError) {
-        const mockErrorMessage = mockError.message || 'Замовлення не знайдено';
-        dispatch(errorOrderDetails(mockErrorMessage));
-        dispatch(
-          showSnackbar({
-            messageId: 'orders.error.details.recieve',
-            variant: snackbarActionVariants.error,
-          })
-        );
-      }
-    });
+  return apiCallWithMockFallback({
+    apiCall: () => api.getOrderDetails(orderId),
+    mockFallback: () => getMockOrderDetails(orderId),
+    onSuccess: receiveOrderDetails,
+    onError: errorOrderDetails,
+    successMessageId: 'orders.details.recieved',
+    mockSuccessMessageId: 'orders.mock.recieved',
+    errorMessageId: 'orders.error.details.recieved',
+    dispatch,
+  });
 };
 
 const fetchUpdateOrder = (orderId, orderData) => (dispatch) => {
   dispatch(requestUpdateOrder());
 
-  return updateOrder(orderId, orderData)
-    .then((order) => {
-      dispatch(successUpdateOrder(order));
-      dispatch(
-        showSnackbar({
-          messageId: 'orders.details.updated',
-          variant: snackbarActionVariants.info,
-        })
-      );
-      return order;
-    })
-    .catch((error) => {
-      try {
-        // Use mock data when an error occurs
-        const mockOrder = updateMockOrder(orderId, orderData);
-        dispatch(successUpdateOrder(mockOrder));
-        dispatch(
-          showSnackbar({
-            messageId: 'orders.mock.updated',
-            variant: snackbarActionVariants.info,
-          })
-        );
-        return mockOrder;
-      } catch (mockError) {
-        const mockErrorMessage =
-          mockError.message || 'Помилка при оновленні замовлення';
-        dispatch(errorUpdateOrder(mockErrorMessage));
-        dispatch(
-          showSnackbar({
-            messageId: 'orders.error.update',
-            variant: snackbarActionVariants.error,
-          })
-        );
-      }
-    });
+  return apiCallWithMockFallback({
+    apiCall: () => api.updateOrder(orderId, orderData),
+    mockFallback: () => updateMockOrder(orderId, orderData),
+    onSuccess: successUpdateOrder,
+    onError: errorUpdateOrder,
+    successMessageId: 'orders.details.updated',
+    mockSuccessMessageId: 'orders.mock.updated',
+    errorMessageId: 'orders.error.update',
+    dispatch,
+  });
 };
 
 const fetchCreateOrder = (orderData) => (dispatch) => {
   dispatch(requestCreateOrder());
 
-  return createOrder(orderData)
-    .then((order) => {
-      dispatch(successCreateOrder(order));
-      dispatch(
-        showSnackbar({
-          messageId: 'orders.created',
-          variant: snackbarActionVariants.info,
-        })
-      );
-      return order;
-    })
-    .catch((error) => {
-      try {
-        // Use mock data when an error occurs
-        const mockOrder = createMockOrder(orderData);
-        dispatch(successCreateOrder(mockOrder));
-        dispatch(
-          showSnackbar({
-            messageId: 'orders.mock.created',
-            variant: snackbarActionVariants.info,
-          })
-        );
-        return mockOrder;
-      } catch (mockError) {
-        const mockErrorMessage =
-          mockError.message || 'Помилка при створенні замовлення';
-        dispatch(errorCreateOrder(mockErrorMessage));
-        dispatch(
-          showSnackbar({
-            messageId: 'orders.error.create',
-            variant: snackbarActionVariants.error,
-          })
-        );
-      }
-    });
+  return apiCallWithMockFallback({
+    apiCall: () => api.createOrder(orderData),
+    mockFallback: () => createMockOrder(orderData),
+    onSuccess: successCreateOrder,
+    onError: errorCreateOrder,
+    successMessageId: 'orders.created',
+    mockSuccessMessageId: 'orders.mock.created',
+    errorMessageId: 'orders.error.create',
+    dispatch,
+  });
 };
 
 const changePage = (page) => (dispatch) => {

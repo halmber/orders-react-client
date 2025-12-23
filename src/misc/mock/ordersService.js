@@ -59,14 +59,15 @@ export const getMockOrdersList = (page = 0, size = 10, filters = {}) => {
     createdAt: order.createdAt,
     customer: {
       id: order.customer.id,
-      fullName: `${order.customer.firstName} ${order.customer.lastName}`,
+      firstName: order.customer.firstName,
+      lastName: order.customer.lastName,
       email: order.customer.email,
     },
   }));
 
   return {
     orders,
-    totalAmount,
+    totalPages: Math.ceil(totalAmount / size),
   };
 };
 

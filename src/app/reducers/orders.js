@@ -58,7 +58,7 @@ export default function ordersReducer(state = initialState, action) {
       return {
         ...state,
         list: action.payload.orders,
-        totalPages: Math.ceil(action.payload.totalAmount / state.pageSize),
+        totalPages: action.payload.totalPages,
         isFetchingList: false,
         errorList: null,
         errorCreate: null,

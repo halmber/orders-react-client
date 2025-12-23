@@ -191,7 +191,10 @@ function OrderDetails({
                           })}
                         </Typography>
                         <Typography>
-                          <strong>{order?.customer?.fullName || '-'}</strong>
+                          <strong>
+                            {`${order?.customer?.firstName} ${order?.customer?.lastName}`.trim() ||
+                              '-'}
+                          </strong>
                         </Typography>
                       </div>
                       <div className={classes.viewField}>
