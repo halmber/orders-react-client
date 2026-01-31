@@ -12,6 +12,7 @@
   "field.loginOrEmail": "Логiн або Email",
   "field.password": "Пароль",
   "field.passwordConfirm": "Підтвердіть пароль",
+  "googleLogin": "Увiйти через Google",
   "signIn": "Увiйти",
   "signUp": "Реєстрація",
   "signUp.error.EMPTY_SIGN_UP_LOGIN": "Логiн не може бути пустим",

@@ -1,12 +1,15 @@
 import {
+  ERROR_GOOGLE_LOGIN,
   ERROR_RECEIVE_USER,
   ERROR_SIGN_IN,
   ERROR_SIGN_UP,
   RECEIVE_USER,
+  REQUEST_GOOGLE_LOGIN,
   REQUEST_SIGN_OUT,
   REQUEST_SIGN_IN,
   REQUEST_SIGN_UP,
   REQUEST_USER,
+  SUCCESS_GOOGLE_LOGIN,
   SUCCESS_SIGN_IN,
   SUCCESS_SIGN_UP,
 } from '../constants/actionTypes';
@@ -18,8 +21,10 @@ const initialState = {
   errors: [],
   id: '',
   isAuthorized: false,
+  isFailedGoogleLogin: false,
   isFailedSignIn: false,
   isFailedSignUp: false,
+  isFetchingGoogleLogin: false,
   isFetchingSignIn: false,
   isFetchingSignUp: false,
   isFetchingUser: false,
@@ -27,10 +32,11 @@ const initialState = {
   login: '',
 };
 
-const convertErrors = errors => errors.map(error => ({
-  code: error.code,
-  description: error.description,
-}));
+const convertErrors = (errors) =>
+  errors.map((error) => ({
+    code: error.code,
+    description: error.description,
+  }));
 
 export default function Reducer(state = initialState, action) {
   switch (action.type) {
@@ -52,8 +58,18 @@ export default function Reducer(state = initialState, action) {
       };
     }
 
+    case ERROR_GOOGLE_LOGIN: {
+      return {
+        ...state,
+        errors: convertErrors(action.payload),
+        isFailedGoogleLogin: true,
+        isFetchingGoogleLogin: false,
+      };
+    }
+
     case RECEIVE_USER:
-    case SUCCESS_SIGN_IN: {
+    case SUCCESS_SIGN_IN:
+    case SUCCESS_GOOGLE_LOGIN: {
       const user = action.payload;
 
       return {
@@ -63,6 +79,7 @@ export default function Reducer(state = initialState, action) {
         firstName: user.firstName || initialState.firstName,
         id: user.id || initialState.id,
         isAuthorized: true,
+        isFetchingGoogleLogin: false,
         isFetchingSignIn: false,
         isFetchingUser: false,
         lastName: user.lastName || initialState.lastName,
@@ -88,7 +105,16 @@ export default function Reducer(state = initialState, action) {
         errors: initialState.errors,
         isFailedSignIn: false,
         isFetchingSignIn: true,
-      }
+      };
+    }
+
+    case REQUEST_GOOGLE_LOGIN: {
+      return {
+        ...state,
+        errors: initialState.errors,
+        isFailedGoogleLogin: false,
+        isFetchingGoogleLogin: true,
+      };
     }
 
     case REQUEST_USER: {
@@ -104,7 +130,7 @@ export default function Reducer(state = initialState, action) {
         errors: initialState.errors,
         isFetchingSignUp: true,
         isFailedSignUp: false,
-      }
+      };
     }
 
     default: {

@@ -7,6 +7,7 @@ import AuthoritiesProvider from 'misc/providers/AuthoritiesProvider';
 import DefaultPage from 'pageProviders/Default';
 import Loading from 'components/Loading';
 import LoginPage from 'pageProviders/Login';
+import OAuthCallbackPage from 'pageProviders/OAuthCallback';
 import OrdersPage from 'pageProviders/Orders';
 import OrderDetailsPage from 'pageProviders/OrderDetails';
 import PageContainer from 'pageProviders/components/PageContainer';
@@ -31,8 +32,10 @@ function App() {
 
   const {
     errors,
+    isFailedGoogleLogin,
     isFailedSignIn,
     isFailedSignUp,
+    isFetchingGoogleLogin,
     isFetchingSignIn,
     isFetchingSignUp,
     isFetchingUser,
@@ -90,20 +93,29 @@ function App() {
                         path={`${pageURLs[pages.order]}/:id`}
                       />
                       <Route
+                        element={<OAuthCallbackPage />}
+                        path={`${pageURLs[pages.oauthCallback]}`}
+                      />
+                      <Route
                         element={
                           <LoginPage
                             errors={errors}
+                            isFailedGoogleLogin={isFailedGoogleLogin}
                             isFailedSignIn={isFailedSignIn}
                             isFailedSignUp={isFailedSignUp}
+                            isFetchingGoogleLogin={isFetchingGoogleLogin}
                             isFetchingSignIn={isFetchingSignIn}
                             isFetchingSignUp={isFetchingSignUp}
+                            onGoogleLogin={() =>
+                              dispatch(actionsUser.fetchGoogleLogin())
+                            }
                             onSignIn={({ email, login, password }) =>
                               dispatch(
                                 actionsUser.fetchSignIn({
                                   email,
                                   login,
                                   password,
-                                })
+                                }),
                               )
                             }
                             onSignUp={({
@@ -120,7 +132,7 @@ function App() {
                                   lastName,
                                   login,
                                   password,
-                                })
+                                }),
                               )
                             }
                           />

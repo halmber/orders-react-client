@@ -1,14 +1,32 @@
 import { useIntl } from 'react-intl';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Typography from 'components/Typography';
+import * as pages from 'constants/pages';
+import pagesURLs from 'constants/pagesURLs';
 
 function Default() {
   const { formatMessage } = useIntl();
 
+  const pageLinks = [
+    { key: pages.orders, label: 'Orders' },
+    { key: pages.secretPage, label: 'Secret Page' },
+    { key: pages.login, label: 'Login' },
+  ];
+
   return (
-    <Typography>
-      {formatMessage({ id: 'title' })}
-    </Typography>
+    <div>
+      <Typography>{formatMessage({ id: 'title' })}</Typography>
+      <div style={{ marginTop: '20px' }}>
+        <ul>
+          {pageLinks.map((page) => (
+            <li key={page.key}>
+              <Link to={pagesURLs[page.key]}>{page.label}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
 
