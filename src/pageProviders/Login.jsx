@@ -19,8 +19,8 @@ const Login = (props) => {
         locationSearch: locationSearch.redirectLocationSearch
           ? JSON.parse(locationSearch.redirectLocationSearch)
           : locationSearch,
-        pathname: locationSearch.redirectPathname
-          || `${pagesURLs[pages.defaultPage]}`,
+        pathname:
+          locationSearch.redirectPathname || `${pagesURLs[pages.defaultPage]}`,
         replace: true,
       });
     }
@@ -28,11 +28,7 @@ const Login = (props) => {
 
   return (
     <PageContainer>
-      {user.isAuthorized
-        ? null
-        : (
-          <LoginPage {...props} />
-        )}
+      {user.isAuthorized ? null : <LoginPage {...props} />}
     </PageContainer>
   );
 };

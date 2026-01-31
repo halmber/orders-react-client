@@ -1,9 +1,9 @@
 import { useIntl } from 'react-intl';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Typography from 'components/Typography';
 import * as pages from 'constants/pages';
 import pagesURLs from 'constants/pagesURLs';
+import Link from 'components/Link';
 
 function Default() {
   const { formatMessage } = useIntl();
@@ -21,7 +21,7 @@ function Default() {
         <ul>
           {pageLinks.map((page) => (
             <li key={page.key}>
-              <Link to={pagesURLs[page.key]}>{page.label}</Link>
+              <Link to={{ pathname: pagesURLs[page.key] }}>{page.label}</Link>
             </li>
           ))}
         </ul>

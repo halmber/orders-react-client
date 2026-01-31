@@ -38,13 +38,14 @@ function LeftNavBar() {
     isNavMenuOpened: false,
   });
 
-  const onClose = () => setState({
-    ...state,
-    isNavMenuOpened: false,
-  });
+  const onClose = () =>
+    setState({
+      ...state,
+      isNavMenuOpened: false,
+    });
 
   const filteredItems = useMemo(
-    () => menuItems.filter(item => accessValidate(item.neededAuthorities)),
+    () => menuItems.filter((item) => accessValidate(item.neededAuthorities)),
     [accessValidate],
   );
 
@@ -56,15 +57,14 @@ function LeftNavBar() {
     <>
       <IconButton
         colorVariant="header"
-        onClick={() => setState({
-          ...state,
-          isNavMenuOpened: true,
-        })}
+        onClick={() =>
+          setState({
+            ...state,
+            isNavMenuOpened: true,
+          })
+        }
       >
-        <IconMenu
-          color="header"
-          size={32}
-        />
+        <IconMenu color="header" size={32} />
       </IconButton>
       <SwipeableDrawer
         anchor="left"
@@ -72,8 +72,9 @@ function LeftNavBar() {
         onClose={onClose}
       >
         <div className={classes.menuHeaderSpace} />
-        {filteredItems.map(menuItem => (
+        {filteredItems.map((menuItem) => (
           <Link
+            key={menuItem.link}
             onClick={onClose}
             to={{
               pathname: menuItem.link,

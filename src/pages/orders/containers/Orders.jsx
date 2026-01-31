@@ -9,7 +9,6 @@ import CardTitle from 'components/CardTitle';
 import Dialog from 'components/Dialog';
 import IconButton from 'components/IconButton';
 import IconDelete from 'components/icons/Delete';
-import TextField from 'components/TextField';
 import Typography from 'components/Typography';
 import Loading from 'components/Loading';
 import Select from 'components/Select';
@@ -254,10 +253,7 @@ function Orders({
                           {formatMessage({ id: 'orders.field.customer' })}
                         </Typography>
                         <Typography>
-                          <strong>
-                            {`${order.customer.firstName} ${order.customer.lastName}`.trim() ||
-                              '-'}
-                          </strong>
+                          <strong>{order.customer.fullName || '-'}</strong>
                         </Typography>
                         <Typography variant="caption">
                           {order.customer.email}
@@ -306,7 +302,7 @@ function Orders({
                         <Typography variant="caption">
                           {formatDate(
                             order.createdAt,
-                            DEFAULT_FORMATDATE_OPTIONS
+                            DEFAULT_FORMATDATE_OPTIONS,
                           )}
                         </Typography>
                       </div>
@@ -390,7 +386,7 @@ function Orders({
                   />
                 ))}
               </Select>
-              <TextField
+              {/* <TextField
                 label={formatMessage({ id: 'orders.field.customerEmail' })}
                 value={filterValues.customerEmail}
                 onChange={(e) =>
@@ -399,7 +395,7 @@ function Orders({
                     customerEmail: e.target.value,
                   })
                 }
-              />
+              /> */}
             </div>
           </CardContent>
           <CardActions>
@@ -439,10 +435,7 @@ function Orders({
             </Typography>
             {orderToDelete && (
               <Typography>
-                <strong>
-                  {`${orderToDelete.customer.firstName} ${orderToDelete.customer.lastName}`.trim() ||
-                    '-'}
-                </strong>
+                <strong>{orderToDelete.customer.fullName || '-'}</strong>
                 {' - '}
                 {`${orderToDelete.amount.toFixed(2)} ${AMOUNT_CURRENCY}`}
               </Typography>

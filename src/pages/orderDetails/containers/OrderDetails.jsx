@@ -94,7 +94,7 @@ function OrderDetails({
   // Create validation schema
   const validationSchema = useMemo(
     () => createValidationSchema(orderFieldsConfig, formatMessage),
-    [formatMessage]
+    [formatMessage],
   );
 
   // Create initial values
@@ -115,7 +115,7 @@ function OrderDetails({
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const orderData = {
-        customerId: values.customerId,
+        ...(isNew && { customerId: values.customerId }),
         amount: parseFloat(values.amount),
         status: values.status,
         paymentMethod: values.paymentMethod,
@@ -232,8 +232,8 @@ function OrderDetails({
                     </div>
                   )}
 
-                  {/* Customer ID - editable only in edit mode or when creating */}
-                  {(isNew || isEditMode) && (
+                  {/* Customer ID - editable only when creating */}
+                  {isNew && (
                     <div className={classes.formRow}>
                       <TextField
                         name="customerId"
@@ -380,7 +380,7 @@ function OrderDetails({
                           <Typography variant="caption">
                             {formatDate(
                               order?.createdAt,
-                              DEFAULT_FORMATDATE_OPTIONS
+                              DEFAULT_FORMATDATE_OPTIONS,
                             )}
                           </Typography>
                         </div>

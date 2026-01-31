@@ -3,17 +3,14 @@ import { useSelector } from 'react-redux';
 
 export const UserContext = createContext({});
 
-const UserProvider = ({
-  children,
-}) => {
+const UserProvider = ({ children }) => {
   const user = useSelector(({ user }) => user);
   return (
     <UserContext.Provider
       value={{
         email: user.email,
-        firstName: user.firstName,
+        fullName: user.fullName,
         id: user.id,
-        lastName: user.lastName,
         login: user.login,
       }}
     >

@@ -16,7 +16,6 @@ import {
 
 const initialState = {
   authorities: [],
-  firstName: '',
   email: '',
   errors: [],
   id: '',
@@ -28,7 +27,7 @@ const initialState = {
   isFetchingSignIn: false,
   isFetchingSignUp: false,
   isFetchingUser: false,
-  lastName: '',
+  fullName: '',
   login: '',
 };
 
@@ -76,13 +75,12 @@ export default function Reducer(state = initialState, action) {
         ...state,
         authorities: user.authorities || initialState.authorities,
         email: user.email || initialState.email,
-        firstName: user.firstName || initialState.firstName,
+        fullName: user.fullName || initialState.fullName,
         id: user.id || initialState.id,
         isAuthorized: true,
         isFetchingGoogleLogin: false,
         isFetchingSignIn: false,
         isFetchingUser: false,
-        lastName: user.lastName || initialState.lastName,
         login: user.login || initialState.login,
       };
     }

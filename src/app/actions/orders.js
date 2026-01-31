@@ -1,13 +1,6 @@
 import axios from 'misc/requests';
 import config from 'config';
 import {
-  getMockOrdersList,
-  getMockOrderDetails,
-  createMockOrder,
-  updateMockOrder,
-  deleteMockOrder,
-} from 'misc/mock/ordersService';
-import {
   REQUEST_ORDERS_LIST,
   RECEIVE_ORDERS_LIST,
   ERROR_ORDERS_LIST,
@@ -34,7 +27,7 @@ import { snackbarActionVariants } from 'app/constants/snackbarVariants';
 
 const handleApiError = (
   error,
-  fallbackMessage = 'error.INTERNAL_SERVER_ERROR'
+  fallbackMessage = 'error.INTERNAL_SERVER_ERROR',
 ) => {
   const message =
     error?.response?.data?.message || error?.message || fallbackMessage;
@@ -44,83 +37,6 @@ const handleApiError = (
     code: error?.response?.status,
     details: error?.response?.data,
   };
-};
-
-/**
- * Wrapper for API calls with mock data fallback and snackbar notifications
- */
-export const apiCallWithMockFallback = async ({
-  apiCall,
-  mockFallback,
-  onSuccess,
-  onError,
-  successMessageId,
-  errorMessageId,
-  mockSuccessMessageId,
-  dispatch,
-}) => {
-  try {
-    const data = await apiCall();
-
-    if (onSuccess) dispatch(onSuccess(data));
-
-    if (successMessageId) {
-      dispatch(
-        showSnackbar({
-          messageId: successMessageId,
-          variant: snackbarActionVariants.success,
-        })
-      );
-    }
-
-    return data;
-  } catch (error) {
-    const apiError = handleApiError(error);
-
-    // If mock fallback is provided, try to get mock data
-    if (mockFallback) {
-      try {
-        const mockData = await mockFallback();
-
-        if (onSuccess) dispatch(onSuccess(mockData));
-
-        if (mockSuccessMessageId) {
-          dispatch(
-            showSnackbar({
-              messageId: mockSuccessMessageId,
-              variant: snackbarActionVariants.info,
-            })
-          );
-        }
-
-        return mockData;
-      } catch (mockError) {
-        const finalError = handleApiError(mockError);
-
-        if (onError) dispatch(onError(finalError.message));
-
-        if (errorMessageId) {
-          dispatch(
-            showSnackbar({
-              messageId: errorMessageId,
-              variant: snackbarActionVariants.error,
-            })
-          );
-        }
-      }
-    } else {
-      if (onError) dispatch(onError(apiError.message));
-
-      if (errorMessageId) {
-        dispatch(
-          showSnackbar({
-            messageId: errorMessageId,
-            variant: snackbarActionVariants.error,
-          })
-        );
-      }
-    }
-  }
 };
 
 // Action Creators
@@ -246,34 +162,47 @@ const api = {
     customerEmail,
   }) => {
     const { ORDERS_SERVICE } = config;
-    const queryString = buildQueryParams({
-      page,
-      size,
-      status,
-      paymentMethod,
-      customerEmail,
-    });
-    return axios.get(`${ORDERS_SERVICE}/orders?${queryString}`);
+    return axios.post(
+      `${ORDERS_SERVICE}/orders/_list`,
+      {
+        page,
+        size,
+        status,
+        paymentMethod,
+        customerEmail,
+      },
+      {
+        withCredentials: true,
+      },
+    );
   },
 
   deleteOrder: (orderId) => {
     const { ORDERS_SERVICE } = config;
-    return axios.delete(`${ORDERS_SERVICE}/orders/${orderId}`);
+    return axios.delete(`${ORDERS_SERVICE}/orders/${orderId}`, {
+      withCredentials: true,
+    });
   },
 
   getOrderDetails: (orderId) => {
     const { ORDERS_SERVICE } = config;
-    return axios.get(`${ORDERS_SERVICE}/orders/${orderId}`);
+    return axios.get(`${ORDERS_SERVICE}/orders/${orderId}`, {
+      withCredentials: true,
+    });
   },
 
   updateOrder: (orderId, orderData) => {
     const { ORDERS_SERVICE } = config;
-    return axios.put(`${ORDERS_SERVICE}/orders/${orderId}`, orderData);
+    return axios.put(`${ORDERS_SERVICE}/orders/${orderId}`, orderData, {
+      withCredentials: true,
+    });
   },
 
   createOrder: (orderData) => {
     const { ORDERS_SERVICE } = config;
-    return axios.post(`${ORDERS_SERVICE}/orders`, orderData);
+    return axios.post(`${ORDERS_SERVICE}/orders`, orderData, {
+      withCredentials: true,
+    });
   },
 };
 
@@ -284,83 +213,141 @@ const fetchOrdersList = () => (dispatch, getState) => {
 
   dispatch(requestOrdersList());
 
-  return apiCallWithMockFallback({
-    apiCall: () =>
-      api.getOrdersList({
-        page: currentPage,
-        size: pageSize,
-        status: filters.status || undefined,
-        paymentMethod: filters.paymentMethod || undefined,
-        customerEmail: filters.customerEmail || undefined,
-      }),
-    mockFallback: () => getMockOrdersList(currentPage, pageSize, filters),
-    onSuccess: receiveOrdersList,
-    onError: errorOrdersList,
-    successMessageId: 'orders.list.recieved',
-    mockSuccessMessageId: 'orders.mock.recieved',
-    errorMessageId: 'orders.error.list.recieved',
-    dispatch,
-  });
+  return api
+    .getOrdersList({
+      page: currentPage,
+      size: pageSize,
+      status: filters.status || undefined,
+      paymentMethod: filters.paymentMethod || undefined,
+      customerEmail: filters.customerEmail || undefined,
+    })
+    .then((data) => {
+      dispatch(receiveOrdersList(data));
+      dispatch(
+        showSnackbar({
+          messageId: 'orders.list.recieved',
+          variant: snackbarActionVariants.success,
+        }),
+      );
+      return data;
+    })
+    .catch((error) => {
+      const apiError = handleApiError(error);
+      dispatch(errorOrdersList(apiError.message));
+      dispatch(
+        showSnackbar({
+          messageId: 'orders.error.list.recieve',
+          variant: snackbarActionVariants.error,
+        }),
+      );
+    });
 };
 
 const fetchDeleteOrder = (orderId) => (dispatch) => {
   dispatch(requestDeleteOrder());
 
-  return apiCallWithMockFallback({
-    apiCall: () => api.deleteOrder(orderId),
-    mockFallback: () => deleteMockOrder(orderId),
-    onSuccess: () => successDeleteOrder(orderId),
-    onError: errorDeleteOrder,
-    successMessageId: 'orders.deleted',
-    mockSuccessMessageId: 'orders.mock.deleted',
-    errorMessageId: 'orders.error.delete',
-    dispatch,
-  });
+  return api
+    .deleteOrder(orderId)
+    .then(() => {
+      dispatch(successDeleteOrder(orderId));
+      dispatch(
+        showSnackbar({
+          messageId: 'orders.deleted',
+          variant: snackbarActionVariants.success,
+        }),
+      );
+    })
+    .catch((error) => {
+      const apiError = handleApiError(error);
+      dispatch(errorDeleteOrder(apiError.message));
+      dispatch(
+        showSnackbar({
+          messageId: 'orders.error.delete',
+          variant: snackbarActionVariants.error,
+        }),
+      );
+    });
 };
 
 const fetchOrderDetails = (orderId) => (dispatch) => {
   dispatch(requestOrderDetails());
 
-  return apiCallWithMockFallback({
-    apiCall: () => api.getOrderDetails(orderId),
-    mockFallback: () => getMockOrderDetails(orderId),
-    onSuccess: receiveOrderDetails,
-    onError: errorOrderDetails,
-    successMessageId: 'orders.details.recieved',
-    mockSuccessMessageId: 'orders.mock.recieved',
-    errorMessageId: 'orders.error.details.recieved',
-    dispatch,
-  });
+  return api
+    .getOrderDetails(orderId)
+    .then((order) => {
+      dispatch(receiveOrderDetails(order));
+      dispatch(
+        showSnackbar({
+          messageId: 'orders.details.recieved',
+          variant: snackbarActionVariants.success,
+        }),
+      );
+      return order;
+    })
+    .catch((error) => {
+      const apiError = handleApiError(error);
+      dispatch(errorOrderDetails(apiError.message));
+      dispatch(
+        showSnackbar({
+          messageId: 'orders.error.details.recieve',
+          variant: snackbarActionVariants.error,
+        }),
+      );
+    });
 };
 
 const fetchUpdateOrder = (orderId, orderData) => (dispatch) => {
   dispatch(requestUpdateOrder());
 
-  return apiCallWithMockFallback({
-    apiCall: () => api.updateOrder(orderId, orderData),
-    mockFallback: () => updateMockOrder(orderId, orderData),
-    onSuccess: successUpdateOrder,
-    onError: errorUpdateOrder,
-    successMessageId: 'orders.details.updated',
-    mockSuccessMessageId: 'orders.mock.updated',
-    errorMessageId: 'orders.error.update',
-    dispatch,
-  });
+  return api
+    .updateOrder(orderId, orderData)
+    .then((order) => {
+      dispatch(successUpdateOrder(order));
+      dispatch(
+        showSnackbar({
+          messageId: 'orders.details.updated',
+          variant: snackbarActionVariants.success,
+        }),
+      );
+      return order;
+    })
+    .catch((error) => {
+      const apiError = handleApiError(error);
+      dispatch(errorUpdateOrder(apiError.message));
+      dispatch(
+        showSnackbar({
+          messageId: 'orders.error.update',
+          variant: snackbarActionVariants.error,
+        }),
+      );
+    });
 };
 
 const fetchCreateOrder = (orderData) => (dispatch) => {
   dispatch(requestCreateOrder());
 
-  return apiCallWithMockFallback({
-    apiCall: () => api.createOrder(orderData),
-    mockFallback: () => createMockOrder(orderData),
-    onSuccess: successCreateOrder,
-    onError: errorCreateOrder,
-    successMessageId: 'orders.created',
-    mockSuccessMessageId: 'orders.mock.created',
-    errorMessageId: 'orders.error.create',
-    dispatch,
-  });
+  return api
+    .createOrder(orderData)
+    .then((order) => {
+      dispatch(successCreateOrder(order));
+      dispatch(
+        showSnackbar({
+          messageId: 'orders.created',
+          variant: snackbarActionVariants.success,
+        }),
+      );
+      return order;
+    })
+    .catch((error) => {
+      const apiError = handleApiError(error);
+      dispatch(errorCreateOrder(apiError.message));
+      dispatch(
+        showSnackbar({
+          messageId: 'orders.error.create',
+          variant: snackbarActionVariants.error,
+        }),
+      );
+    });
 };
 
 const changePage = (page) => (dispatch) => {

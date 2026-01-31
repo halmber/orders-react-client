@@ -118,18 +118,11 @@ function App() {
                                 }),
                               )
                             }
-                            onSignUp={({
-                              email,
-                              firstName,
-                              lastName,
-                              login,
-                              password,
-                            }) =>
+                            onSignUp={({ email, fullName, login, password }) =>
                               dispatch(
                                 actionsUser.fetchSignUp({
                                   email,
-                                  firstName,
-                                  lastName,
+                                  fullName,
                                   login,
                                   password,
                                 }),

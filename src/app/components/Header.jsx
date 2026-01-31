@@ -77,10 +77,7 @@ const interfaceLagsTranslateShort = {
   [languages.ua]: 'Укр',
 };
 
-const orderedInterfaceLangs = [
-  languages.ua,
-  languages.en,
-];
+const orderedInterfaceLangs = [languages.ua, languages.en];
 
 const rightPanelItemTypes = {
   LANGUAGE: 'language',
@@ -89,9 +86,7 @@ const rightPanelItemTypes = {
   USER_NAME: 'userName',
 };
 
-function Header({
-  onLogout,
-}) {
+function Header({ onLogout }) {
   const { theme } = useTheme();
   const { formatMessage } = useIntl();
   const changePage = useChangePage();
@@ -108,16 +103,13 @@ function Header({
     isUserMenuOpened: false,
   });
 
-  const userName = user.firstName || user.login;
+  const userName = user.fullName || user.login;
 
   const actualOrderedRightPanelItemTypes = useMemo(() => {
     const result = [];
     if (user.isAuthorized) {
       result.push(rightPanelItemTypes.USER_NAME);
-    } else if (
-      !user.isFetchingUser
-      && currentPage !== pages.login
-    ) {
+    } else if (!user.isFetchingUser && currentPage !== pages.login) {
       result.push(rightPanelItemTypes.LOGIN);
     }
     result.push(rightPanelItemTypes.LANGUAGE);
@@ -140,10 +132,7 @@ function Header({
               pathname: `${pagesURLs[pages.defaultPage]}`,
             }}
           >
-            <Hover
-              light
-              selected={currentPage === pages.defaultPage}
-            >
+            <Hover light selected={currentPage === pages.defaultPage}>
               <div className={classes.hover}>
                 <Logo compact={isMobile} />
               </div>
@@ -157,29 +146,18 @@ function Header({
                 <div ref={userMenuRef}>
                   <Hover
                     light
-                    onClick={() => setState({
-                      ...state,
-                      isUserMenuOpened: true,
-                    })}
+                    onClick={() =>
+                      setState({
+                        ...state,
+                        isUserMenuOpened: true,
+                      })
+                    }
                     selected={state.isUserMenuOpened}
                   >
                     <div className={classes.hover}>
-                      <div
-                        className={isMobile ? classes.userNameMobile : ''}
-                      >
-                        <Typography
-                          color="paper"
-                          noWrap
-                          variant="subtitle"
-                        >
-                          {!isMobile
-                            ? (
-                              <strong>
-                                {userName}
-                              </strong>
-                            )
-                            : userName
-                          }
+                      <div className={isMobile ? classes.userNameMobile : ''}>
+                        <Typography color="paper" noWrap variant="subtitle">
+                          {!isMobile ? <strong>{userName}</strong> : userName}
                         </Typography>
                       </div>
                     </div>
@@ -192,17 +170,9 @@ function Header({
                     pathname: `${pagesURLs[pages.login]}`,
                   }}
                 >
-                  <Button
-                    colorVariant="header"
-                    variant="text"
-                  >
-                    <Typography
-                      color="inherit"
-                      variant="subtitle"
-                    >
-                      <strong>
-                        {formatMessage({ id: 'signIn' })}
-                      </strong>
+                  <Button colorVariant="header" variant="text">
+                    <Typography color="inherit" variant="subtitle">
+                      <strong>{formatMessage({ id: 'signIn' })}</strong>
                     </Typography>
                   </Button>
                 </Link>
@@ -210,40 +180,32 @@ function Header({
               {itemType === rightPanelItemTypes.LANGUAGE && (
                 <>
                   <div className={classes.selectedLang}>
-                    <Typography
-                      color="paper"
-                      noWrap
-                    >
-                      {(isMobile
-                        ? interfaceLagsTranslateShort
-                        : interfaceLagsTranslate
-                      )[locationSearch.lang]}
+                    <Typography color="paper" noWrap>
+                      {
+                        (isMobile
+                          ? interfaceLagsTranslateShort
+                          : interfaceLagsTranslate)[locationSearch.lang]
+                      }
                     </Typography>
                   </div>
                   <div ref={langsMenuRef}>
                     <IconButton
                       colorVariant="header"
-                      onClick={() => setState({
-                        ...state,
-                        isLangsMenuOpened: true,
-                      })}
+                      onClick={() =>
+                        setState({
+                          ...state,
+                          isLangsMenuOpened: true,
+                        })
+                      }
                     >
-                      <IconGlobus
-                        color="header"
-                        size={32}
-                      />
+                      <IconGlobus color="header" size={32} />
                     </IconButton>
                   </div>
                 </>
               )}
               {itemType === rightPanelItemTypes.SEPARATOR && (
-                <Typography
-                  color="paper"
-                  variant="subtitle"
-                >
-                  <strong>
-                    |
-                  </strong>
+                <Typography color="paper" variant="subtitle">
+                  <strong>|</strong>
                 </Typography>
               )}
             </div>
@@ -253,12 +215,14 @@ function Header({
           anchorEl={langsMenuRef.current}
           colorVariant="header"
           open={state.isLangsMenuOpened}
-          onClose={() => setState({
-            ...state,
-            isLangsMenuOpened: false,
-          })}
+          onClose={() =>
+            setState({
+              ...state,
+              isLangsMenuOpened: false,
+            })
+          }
         >
-          {orderedInterfaceLangs.map(lang => (
+          {orderedInterfaceLangs.map((lang) => (
             <MenuItem
               key={lang}
               onClick={() => {
@@ -276,19 +240,19 @@ function Header({
               }}
               selected={locationSearch.lang === lang}
             >
-              <Typography>
-                {interfaceLagsTranslate[lang]}
-              </Typography>
+              <Typography>{interfaceLagsTranslate[lang]}</Typography>
             </MenuItem>
           ))}
         </Menu>
         <Menu
           anchorEl={userMenuRef.current}
           open={state.isUserMenuOpened}
-          onClose={() => setState({
-            ...state,
-            isUserMenuOpened: false,
-          })}
+          onClose={() =>
+            setState({
+              ...state,
+              isUserMenuOpened: false,
+            })
+          }
         >
           <MenuItem
             onClick={() => {
@@ -299,9 +263,7 @@ function Header({
               onLogout();
             }}
           >
-            <Typography>
-              {formatMessage({ id: 'signOut' })}
-            </Typography>
+            <Typography>{formatMessage({ id: 'signOut' })}</Typography>
           </MenuItem>
         </Menu>
       </div>

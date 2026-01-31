@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import * as authorities from 'constants/authorities';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import actionsOrders from 'app/actions/orders';
@@ -8,6 +9,7 @@ import useChangePage from 'misc/hooks/useChangePage';
 import * as pages from 'constants/pages';
 import pageURLs from 'constants/pagesURLs';
 import OrderDetailsPage from 'pages/orderDetails';
+import PageAccessValidator from './components/PageAccessValidator';
 
 const OrderDetailsProvider = () => {
   const dispatch = useDispatch();
@@ -63,20 +65,22 @@ const OrderDetailsProvider = () => {
   }, [createSuccess]);
 
   return (
-    <PageContainer>
-      <OrderDetailsPage
-        order={currentOrder}
-        isNew={isNew}
-        isFetchingDetails={isFetchingDetails}
-        isCreating={isCreatingOrder}
-        isUpdating={isUpdatingOrder}
-        createError={errorCreate}
-        updateError={errorUpdate}
-        onBack={handleBack}
-        onCreate={handleCreate}
-        onUpdate={handleUpdate}
-      />
-    </PageContainer>
+    <PageAccessValidator neededAuthorities={[authorities.ENABLE_ORDERS_ACCESS]}>
+      <PageContainer>
+        <OrderDetailsPage
+          order={currentOrder}
+          isNew={isNew}
+          isFetchingDetails={isFetchingDetails}
+          isCreating={isCreatingOrder}
+          isUpdating={isUpdatingOrder}
+          createError={errorCreate}
+          updateError={errorUpdate}
+          onBack={handleBack}
+          onCreate={handleCreate}
+          onUpdate={handleUpdate}
+        />
+      </PageContainer>
+    </PageAccessValidator>
   );
 };
 
