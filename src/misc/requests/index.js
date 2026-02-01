@@ -9,24 +9,25 @@ axios.interceptors.request.use((params) => {
   return params;
 });
 
-const addAxiosInterceptors = ({
-  onSignOut,
-}) => {
+const addAxiosInterceptors = ({ onSignOut }) => {
   axios.interceptors.response.use(
     (response) => response.data,
     (error) => {
-      if (error.response.data
-        .some(beError => beError?.code === 'INVALID_TOKEN')
-      ) {
+      const data = error?.response?.data;
+
+      const isInvalidToken = Array.isArray(data)
+        ? data.some((e) => e?.code === 'INVALID_TOKEN')
+        : data?.code === 'INVALID_TOKEN';
+
+      if (isInvalidToken) {
         onSignOut();
       }
-      throw error.response.data;
-    }
+
+      throw data;
+    },
   );
 };
 
-export {
-  addAxiosInterceptors,
-};
+export { addAxiosInterceptors };
 
 export default axios;

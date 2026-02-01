@@ -58,11 +58,13 @@ function Index(props) {
         }),
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locationSearch]);
 
   // Fetch orders when page or filters change
   useEffect(() => {
     dispatch(actionsOrders.fetchOrdersList());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, filters]);
 
   // Sync Redux state with URL whenever it changes (skip initial mount)
@@ -109,7 +111,8 @@ function Index(props) {
         locationSearch: newLocationSearch,
       });
     }
-  }, [currentPage, filters, pageSize, hasMounted]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, filters, pageSize, changePage]);
 
   const handleDeleteOrder = (orderId) => {
     return dispatch(actionsOrders.fetchDeleteOrder(orderId));

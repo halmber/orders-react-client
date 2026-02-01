@@ -133,26 +133,6 @@ const errorCreateOrder = (error) => ({
   payload: error,
 });
 
-// API
-const buildQueryParams = ({
-  page,
-  size,
-  status,
-  paymentMethod,
-  customerEmail,
-}) => {
-  const params = new URLSearchParams();
-
-  params.append('page', page);
-  params.append('size', size);
-
-  if (status) params.append('status', status);
-  if (paymentMethod) params.append('paymentMethod', paymentMethod);
-  if (customerEmail) params.append('customerEmail', customerEmail);
-
-  return params.toString();
-};
-
 const api = {
   getOrdersList: ({
     page = 0,

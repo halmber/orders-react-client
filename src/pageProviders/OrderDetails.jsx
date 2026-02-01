@@ -35,7 +35,7 @@ const OrderDetailsProvider = () => {
     if (!isNew) {
       dispatch(actionsOrders.fetchOrderDetails(id));
     }
-  }, [id, isNew]);
+  }, [id, isNew, dispatch]);
 
   const handleBack = () => {
     // Return to the list with filters and pagination preserved
@@ -62,7 +62,7 @@ const OrderDetailsProvider = () => {
         locationSearch,
       });
     }
-  }, [createSuccess]);
+  }, [createSuccess, changePage, locationSearch]);
 
   return (
     <PageAccessValidator neededAuthorities={[authorities.ENABLE_ORDERS_ACCESS]}>

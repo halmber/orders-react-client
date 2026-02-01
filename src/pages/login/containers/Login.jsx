@@ -12,7 +12,7 @@ import IconClose from 'components/icons/Close';
 import IconVisibilityOff from 'components/icons/VisibilityOff';
 import IconVisibilityOn from 'components/icons/VisibilityOn';
 import md5 from 'md5';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import TextField from 'components/TextField';
 import Typography from 'components/Typography';
 
@@ -88,19 +88,22 @@ function Login({
     signUpValidationErrors: [],
   });
 
-  const onCancelSignUp = () =>
-    setState({
-      ...state,
-      externalErrors: [],
-      signUpEmail: '',
-      signUpFirstName: '',
-      signUpLastName: '',
-      signUpLogin: '',
-      signUpPassword: '',
-      signUpPasswordConfirm: '',
-      signUpValidationErrors: [],
-      isSignUpDialogOpened: false,
-    });
+  const onCancelSignUp = useCallback(
+    (state) =>
+      setState({
+        ...state,
+        externalErrors: [],
+        signUpEmail: '',
+        signUpFirstName: '',
+        signUpLastName: '',
+        signUpLogin: '',
+        signUpPassword: '',
+        signUpPasswordConfirm: '',
+        signUpValidationErrors: [],
+        isSignUpDialogOpened: false,
+      }),
+    [],
+  );
 
   const getSignUpValidationErrors = () => {
     const errors = [];
@@ -135,7 +138,8 @@ function Login({
       ...state,
       externalErrors: messages,
     });
-  }, [errors]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errors, formatMessage]);
 
   useEffect(() => {
     if (state.isSignUpDialogOpened && !isFetchingSignUp && !isFailedSignUp) {
@@ -145,8 +149,9 @@ function Login({
           password: md5(state.signUpPassword),
         });
       }
-      onCancelSignUp();
+      onCancelSignUp(state);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFetchingSignUp, isFailedSignUp]);
 
   return (

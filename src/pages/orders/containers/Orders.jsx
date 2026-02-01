@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { useIntl } from 'react-intl';
 import useTheme from 'misc/hooks/useTheme';
@@ -181,11 +181,11 @@ function Orders({
     }
   };
 
-  const handleCancelDelete = () => {
+  const handleCancelDelete = useCallback(() => {
     setIsDeleteDialogOpen(false);
     setOrderToDelete(null);
     onClearDeleteError();
-  };
+  }, [onClearDeleteError]);
 
   // Auto-close dialog on successful delete
   useEffect(() => {
@@ -197,6 +197,7 @@ function Orders({
     ) {
       handleCancelDelete();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDeletingOrder, deleteError]);
 
   if (isFetchingList) {

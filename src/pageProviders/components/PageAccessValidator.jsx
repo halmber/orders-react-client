@@ -17,11 +17,9 @@ function PageAccessValidator({
   const locationSearch = useLocationSearch();
   const validateAccess = useAccessValidate();
 
-  const {
-    isFetchingSignIn,
-    isFetchingUser,
-    isAuthorized,
-  } = useSelector(({ user }) => user);
+  const { isFetchingSignIn, isFetchingUser, isAuthorized } = useSelector(
+    ({ user }) => user,
+  );
 
   const [state, setState] = useState({
     isValid: false,
@@ -29,7 +27,7 @@ function PageAccessValidator({
 
   const hasAccess = useMemo(
     () => validateAccess(neededAuthorities, mode),
-    [neededAuthorities, validateAccess]
+    [neededAuthorities, validateAccess, mode],
   );
 
   useEffect(() => {
@@ -38,10 +36,11 @@ function PageAccessValidator({
         changePage({
           locationSearch: {
             ...locationSearch,
-            redirectLocationSearch: locationSearch.redirectLocationSearch
-              || JSON.stringify(locationSearch),
-            redirectPathname: locationSearch.redirectPathname
-              || location.pathname,
+            redirectLocationSearch:
+              locationSearch.redirectLocationSearch ||
+              JSON.stringify(locationSearch),
+            redirectPathname:
+              locationSearch.redirectPathname || location.pathname,
           },
           pathname: `${pagesURLs[pages.login]}`,
           replace: true,
@@ -51,19 +50,16 @@ function PageAccessValidator({
           pathname: `${pagesURLs[pages.defaultPage]}`,
         });
       } else {
-        setState(prevState => ({
+        setState((prevState) => ({
           ...prevState,
           isValid: true,
         }));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFetchingUser, isAuthorized, hasAccess]);
 
-  return (
-    <>
-      {state.isValid ? children : null}
-    </>
-  );
+  return <>{state.isValid ? children : null}</>;
 }
 
 export default PageAccessValidator;

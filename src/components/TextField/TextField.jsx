@@ -36,7 +36,7 @@ const TextField = ({
   name,
 }) => {
   const { theme } = useTheme();
-  const [ state, setState ] = useState({
+  const [state, setState] = useState({
     isFocused: false,
   });
   const isEmptyValue = !value.length;
@@ -50,7 +50,7 @@ const TextField = ({
       color = theme.input.color[colorVariant].placeholder;
     }
     return color;
-  }, [isError, isEmptyValue, theme, state.isFocused]);
+  }, [isError, isEmptyValue, theme, state.isFocused, colorVariant]);
 
   return (
     <TextFieldMui
@@ -61,9 +61,7 @@ const TextField = ({
       helperText={helperText}
       InputProps={{
         endAdornment: AdornmentEnd && (
-          <InputAdornmentMui position="end">
-            {AdornmentEnd}
-          </InputAdornmentMui>
+          <InputAdornmentMui position="end">{AdornmentEnd}</InputAdornmentMui>
         ),
         startAdornment: AdornmentStart && (
           <InputAdornmentMui position="start">
@@ -72,21 +70,25 @@ const TextField = ({
         ),
         name,
       }}
-      label={(
+      label={
         <Typography color={labelColor}>
           {required ? `${REQUIRED_CHAR}${label}` : label}
         </Typography>
-      )}
+      }
       multiline={multiline}
-      onBlur={() => setState({
-        ...state,
-        isFocused: false,
-      })}
+      onBlur={() =>
+        setState({
+          ...state,
+          isFocused: false,
+        })
+      }
       onChange={onChange}
-      onFocus={() => setState({
-        ...state,
-        isFocused: true,
-      })}
+      onFocus={() =>
+        setState({
+          ...state,
+          isFocused: true,
+        })
+      }
       onSelect={onSelect}
       sx={{
         '& .MuiInputBase-root:before': {
@@ -97,19 +99,23 @@ const TextField = ({
         },
         '& .MuiInputBase-root': {
           background: disabled && 'rgba(0, 0, 0, 0.05) !important',
-          borderBottom: `1px solid ${isError
-            ? theme.colors.text.error
-            : theme.input.color[colorVariant].border}`,
+          borderBottom: `1px solid ${
+            isError
+              ? theme.colors.text.error
+              : theme.input.color[colorVariant].border
+          }`,
           color: theme.input.color[colorVariant].text.primary,
           opacity: disabled && '0.4',
           marginTop: `${theme.spacing(1.5)}px`,
           '&:hover': !disabled
             ? {
-              marginBottom: '-0.5px !important',
-              borderBottom: `2px solid ${isError
-                ? theme.colors.text.error
-                : theme.input.color[colorVariant].border}`,
-            }
+                marginBottom: '-0.5px !important',
+                borderBottom: `2px solid ${
+                  isError
+                    ? theme.colors.text.error
+                    : theme.input.color[colorVariant].border
+                }`,
+              }
             : {},
         },
       }}
