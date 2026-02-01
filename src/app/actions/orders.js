@@ -163,7 +163,7 @@ const api = {
   }) => {
     const { ORDERS_SERVICE } = config;
     return axios.post(
-      `${ORDERS_SERVICE}/orders/_list`,
+      `${ORDERS_SERVICE}/api/orders/_list`,
       {
         page,
         size,
@@ -179,28 +179,28 @@ const api = {
 
   deleteOrder: (orderId) => {
     const { ORDERS_SERVICE } = config;
-    return axios.delete(`${ORDERS_SERVICE}/orders/${orderId}`, {
+    return axios.delete(`${ORDERS_SERVICE}/api/orders/${orderId}`, {
       withCredentials: true,
     });
   },
 
   getOrderDetails: (orderId) => {
     const { ORDERS_SERVICE } = config;
-    return axios.get(`${ORDERS_SERVICE}/orders/${orderId}`, {
+    return axios.get(`${ORDERS_SERVICE}/api/orders/${orderId}`, {
       withCredentials: true,
     });
   },
 
   updateOrder: (orderId, orderData) => {
     const { ORDERS_SERVICE } = config;
-    return axios.put(`${ORDERS_SERVICE}/orders/${orderId}`, orderData, {
+    return axios.put(`${ORDERS_SERVICE}/api/orders/${orderId}`, orderData, {
       withCredentials: true,
     });
   },
 
   createOrder: (orderData) => {
     const { ORDERS_SERVICE } = config;
-    return axios.post(`${ORDERS_SERVICE}/orders`, orderData, {
+    return axios.post(`${ORDERS_SERVICE}/api/orders`, orderData, {
       withCredentials: true,
     });
   },

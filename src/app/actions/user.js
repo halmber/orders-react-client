@@ -71,8 +71,8 @@ const successGoogleLogin = (user) => ({
 });
 
 const getUser = () => {
-  const { ORDERS_GATEWAY_SERVICE } = config;
-  return axios.get(`${ORDERS_GATEWAY_SERVICE}/api/profile`, {
+  const { ORDERS_SERVICE } = config;
+  return axios.get(`${ORDERS_SERVICE}/api/profile`, {
     withCredentials: true,
   });
 };
@@ -97,8 +97,8 @@ const signUp = ({ email, fullName, login, password }) => {
 };
 
 const googleLogin = () => {
-  const { ORDERS_GATEWAY_SERVICE } = config;
-  window.location.href = `${ORDERS_GATEWAY_SERVICE}/oauth/authenticate`;
+  const { ORDERS_SERVICE } = config;
+  window.location.assign(`${ORDERS_SERVICE}/oauth/authenticate`);
 };
 
 const fetchRefreshToken = () => (dispatch) => {};
