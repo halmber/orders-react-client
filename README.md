@@ -159,12 +159,11 @@ npm run build
 
 ## Configuration
 
-Environment variables are managed through `src/config/index.js`:
+Environment variables are managed through `src/config/index.js`. Setup `.env` only for dev mode by coping `.env_example`:
 
 ```javascript
 const config = {
-  UI_URL_PREFIX: '/app',
-  ORDERS_SERVICE: 'http://api.example.com',
+  ORDERS_SERVICE: process.env.REACT_APP_ORDERS_SERVICE || '',
 };
 ```
 
