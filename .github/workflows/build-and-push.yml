@@ -56,8 +56,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/orders-frontend:${{ github.sha }}
-            ${{ env.REGISTRY }}/orders-frontend:latest
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/orders-frontend:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/orders-frontend:latest
 
   # Trigger deployment in separate infrastructure repository
   trigger-deploy:
